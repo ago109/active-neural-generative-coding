@@ -28,12 +28,14 @@ class ANGC:
 
         self.gamma = 0.99 #0.999 #0.9 #0.99 #0.95 #0.99 # 0.95 #0.98
         self.eps = 0.3 #0.9 #0.2 #0.3 #1. #0.95 #0.05 # for eps-greedy policy
-        self.eps_decay = 0.99 #0.999 #0.9995 #0.975 #0.9997 #0.9925 # 0.97
-        self.eps_min = 0.01 #0.1 #0.05 # 0.1
+        self.eps_decay = 0.998 #0.999 #0.9995 #0.975 #0.9997 #0.9925 # 0.97
+        self.eps_min = 0.01 #0.05 #0.1
         self.normalize_reward = True
+        self.epi_w = 1. #1. #0.95
         self.r_epi_mu = 0.
         self.r_epi_var = 0.
         self.r_epi_N = 0.
+        # 50-100 w/ 1e5
 
         # self.EPS_START = 0.9
         # self.EPS_END = 0.05
@@ -47,25 +49,42 @@ class ANGC:
 
         ## actor model
         self.key, *subkeys = random.split(self.key, 3)
-        # self.actor = NGC(n_x, n_a, n_z=[256,128], beta=0.05, eta=0.001, K=10,
-        #                  batch_size=batch_size, key=subkeys[0])
-        # self.target_actor = NGC(n_x, n_a, n_z=[256,128], beta=0., eta=0.0, K=1,
-        #                         batch_size=batch_size, key=subkeys[0])
-        self.actor = MLP(n_x, n_a, n_z=[50,100], eta=0.001,
+        # TODO: find old ngc code on cpole (in TF2 on flashdrive in office??)
+        # TODO: add in converge check for d1.t/d2.t in ngc model (cut off inf if < tol)
+        Ka = 10 #40 # <-- more seemed to help
+        #Ka = 30 #20 #20 #10 #40 #30 #25 #15 #8 #30 # 12 #10 #8 #10
+        Kg = 6 #10 #8 #10
+        # [64,128]
+        # beta = 0.05
+        #'''
+        beta = 0.05 # 0.1 # for GPC/Z-IL
+        self.actor = NGC(n_x, n_a, n_z=[50,100], update_clip=100., beta=beta, eta=0.001, K=Ka,
                          batch_size=batch_size, key=subkeys[0])
+        self.target_actor = NGC(n_x, n_a, n_z=[50,100], beta=0., eta=0.0, K=1,
+                                batch_size=batch_size, key=subkeys[0])
+        #'''
+        '''
+        self.actor = MLP(n_x, n_a, n_z=[50,100], eta=0.001,
+                         batch_size=batch_size, grad_clip=10., key=subkeys[0])
         self.target_actor = MLP(n_x, n_a, n_z=[50,100], eta=0.0,
                                 batch_size=batch_size, key=subkeys[0])
+        '''
         self.target_actor.theta[0] = self.actor.theta[0] + 0
         self.target_actor.theta[1] = self.actor.theta[1] + 0
         self.target_actor.theta[2] = self.actor.theta[2] + 0
         self.target_actor.theta[3] = self.actor.theta[3] + 0
         self.target_actor.theta[4] = self.actor.theta[4] + 0
         self.target_actor.theta[5] = self.actor.theta[5] + 0
+
         ## generative model synapses
         # self.world_model = NGC(n_x, n_x, n_z=[256,128], beta=0.05, eta=0.001, K=10,
         #                      batch_size=batch_size, key=subkeys[0])
-        self.world_model = NGC(n_x, n_x, n_z=[256,128], eta=0.0002,
-                             batch_size=batch_size, key=subkeys[0])
+        grad_clip = 10. #2.
+        self.world_model = MLP(n_x, n_x, n_z=[256,128], eta=0.001,
+                               batch_size=batch_size, grad_clip=10., key=subkeys[1])
+        #self.world_model = NGC(n_x, n_x, n_z=[128,128], update_clip=10., beta=0.05,  eta=0.001, #0.0002,
+        #                       K=Kg, batch_size=batch_size, key=subkeys[1])
+        #n_mem = 1000000 #
         n_mem = 100000
         self.memory = Buffer(buffer_capacity=n_mem, batch_size=self.batch_size, seed=seed)
 
@@ -76,6 +95,10 @@ class ANGC:
         TODO:
         also put back in RMSprop
         '''
+
+    def normalize_signal(self, r):
+        r = (r - self.rEpi_min)/(self.rEpi_max - self.rEpi_min)
+        return r
 
     def get_action(self, z_t):
         qVals = self.policy(z_t)
@@ -138,7 +161,7 @@ class ANGC:
             sT, a, r, r_epi, sTP1, D = self.memory.sample(batch_size=self.batch_size)
             #r_epi = 0.
             if self.normalize_reward == True:
-                r_epi = (r_epi - self.rEpi_min)/(self.rEpi_max - self.rEpi_min)
+                r_epi = self.normalize_signal(r_epi) * self.epi_w
             self._update(sT, a, r, r_epi, sTP1, D)
 
     def process(self, s_t, a_t, r_t, r_epi, s_tp1, D_t): ## processes a current transition
@@ -156,48 +179,12 @@ class ANGC:
                 self.rEpi_max = float(jnp.amax(r_epi))
 
         self.memory.record((s_t, jnp.asarray([[a_t]]), jnp.asarray([[r_t]]), r_epi, s_tp1, jnp.asarray([[D_t]])))
-        #if len(self.memory.experiences) > self.memory.batch_size:
-        #    sT, a, r, sTP1, D = self.memory.sample()
-        #    r_epi = 0.
-            # ## run world model
-            # H, Z = self.world_model._project(sT)
-            # mu_tp1 = Z[len(Z)-1]
-            # #_r_epi = jnp.linalg.norm(s_tp1 - mu_tp1, axis=1, keepdims=True)
-            # r_epi = jnp.sum(jnp.square(sTP1 - mu_tp1))
-            # #
-            # self.rEpi_min = min(self.rEpi_min, float(jnp.amin(r_epi)))
-            # if self.rEpi_max is not None:
-            #     self.rEpi_max = max(self.rEpi_max, float(jnp.amax(r_epi)))
-            # else:
-            #     self.rEpi_max = float(jnp.amax(r_epi))
-            # r_epi = (r_epi - self.rEpi_min)/(self.rEpi_max - self.rEpi_min)
-
-            #self._update(sT, a, r, r_epi, sTP1, D)
-
-        ## run world model
-        # H, Z = self.world_model._project(s_t)
-        # mu_tp1 = Z[len(Z)-1]
-        # #_r_epi = jnp.linalg.norm(s_tp1 - mu_tp1, axis=1, keepdims=True)
-        # r_epi = jnp.sum(jnp.square(s_tp1 - mu_tp1))
-        # r_epi = r_epi * 0 # 0.9
-
-        #r_epi_sd = 1.
-        #if self.r_epi_N > 0.:
-        #    r_epi_sd = jnp.sqrt(self.r_epi_var/self.r_epi_N)
-        #r_epi = _r_epi/(r_epi_sd + 1e-5)
-
-        #r_epi = _r_epi - (self.r_epi_mu/(self.r_epi_N + 1.))
-        # self.r_epi_mu += jnp.sum(_r_epi)
-        # self.r_epi_var += jnp.square(_r_epi - self.r_epi_mu)
-        # self.r_epi_N += s_t.shape[0]
-
-        #self.update(s_t, a_t, r_t, r_epi, s_tp1, D_t)
         return float(r_epi)
 
     def _update(self, s_t, a_t, r_t, r_epi, s_tp1, D_t): ## conducts a step of memory-induced learning
 
         r = r_t + r_epi # full EFE is instrumental + epistemic signals
-        _action = nn.one_hot(jnp.squeeze(a_t), 2)
+        _action = nn.one_hot(jnp.squeeze(a_t), self.n_a)
 
         ## run actor
         H_t, Z_t = self.actor._project(s_t)
@@ -213,7 +200,7 @@ class ANGC:
         target = _action * y + (q_t * (1. - _action))
 
         ## adjust synaptic parameters of agent's modules
-        self.actor._settle(s_t, target)      ## update actor model
+        self.actor._settle(s_t, target, m=_action)      ## update actor model
         self.world_model._settle(s_t, s_tp1) ## update generative model
 
     def update_target(self):

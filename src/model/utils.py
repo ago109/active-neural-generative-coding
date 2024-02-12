@@ -12,8 +12,29 @@ from matplotlib import gridspec
 import numpy as np
 import io
 
+@jit
+def flatten(matrix_set):
+    vec = []
+    for i in range(len(matrix_set)):
+        mat = matrix_set[i]
+        flat_mat = jnp.reshape(mat, (1, mat.shape[0] * mat.shape[1])) #, dtype=jnp.float32)
+        vec.append(flat_mat)
+        #if i > 0:
+        #    vec = jnp.concatenate((vec, flat_mat), axis=1)
+        #else:
+        #    vec = flat_mat
+    _vec = jnp.concatenate(vec, axis=1)
+    return _vec # flattened super vector
+
+@jit
+def cos_sim(v1, v2):
+    prod = jnp.matmul(v1, v2.T)
+    prod = prod/(jnp.linalg.norm(v1) * jnp.linalg.norm(v2) + 1e-6)
+    return prod
+
+@jit
 def idfx(v):
-    return v
+    return v + 0
 
 @jit
 def kwta(x, nWTA=5): #5 10 15 #K=50):
