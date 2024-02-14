@@ -98,8 +98,8 @@ for e in range(n_episodes):
             if r_t >= 0.:
                 r_t = 1. # give small "bonus" when goal state is reached in mcar
         r_epist = agent.process(obs_t, act_t, reward, r_epi, obs_tp1, D_t)
-        agent.update()
-        r_epist = agent.normalize_signal(r_epist)
+        agent.update() ## trigger agent's parameter update at time t
+        r_epist = agent.normalize_signal(r_epist) ## get proper epistemic signal
         ep_Repi += r_epist
 
         if t % targ_shift == 0:

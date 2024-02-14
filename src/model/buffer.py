@@ -11,6 +11,12 @@ class Buffer:
     (Ororbia & Kelly, 2022; https://escholarship.org/uc/item/35j3v2kh), where
     the module was first developed/used.
 
+    -- Arguments --
+    :param buffer_capacity: how many total memories can be held before memory
+                            forgets its earliest transition memory
+    :param batch_size: number of samples memory should produce when sampled
+    :param seed: integer to seed memory's randomness with
+
     @author: Alexander G. Ororbia II
     """
     def __init__(self, buffer_capacity=100000, batch_size=64, seed=69):
@@ -43,6 +49,8 @@ class Buffer:
     def get_current_capacity(self):
         """
         Returns many sampled transitions are stored in memory currently
+
+        :return: current replay memory usage
         """
         return self.buffer_counter
 
@@ -50,6 +58,9 @@ class Buffer:
     def record(self, obs_tuple):
         """
         Record the current transition to the memory buffer
+
+        -- Arguments --
+        :param obs_tuple: an environmental transition
         """
         # Set index to zero if buffer_capacity is exceeded,
         # replacing old records
@@ -75,6 +86,12 @@ class Buffer:
     def sample(self, batch_size=-1, sample_noreplace=False):
         """
         Samples a mini-batch of transitions from the current memory buffer
+
+        -- Arguments --
+        :param batch_size: # of samples to place in a sampled memory batch
+        :param sample_noreplace: if True, sample w/o replacement from memory
+
+        :return: a batch of transition samples extracted from memory
         """
         # get sampling range
         sample_size = batch_size

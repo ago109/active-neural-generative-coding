@@ -15,7 +15,7 @@ class SGD():
     given adjustments produced by a credit assignment algorithm.
 
     -- Arguments --
-    learning_rate: step size coefficient for SGD update
+    :param learning_rate: step size coefficient for SGD update
 
     @author: Alexander G. Ororbia II
     """

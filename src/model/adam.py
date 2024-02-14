@@ -27,10 +27,10 @@ class Adam():
     update rule given adjustments produced by a credit assignment algorithm.
 
     -- Arguments --
-    learning_rate: step size coefficient for SGD update
-    beta1: 1st moment control factor
-    beta2: 2nd moment control factor
-    epsilon: numberical stability coefficient (for calculating final update)
+    :param learning_rate: step size coefficient for SGD update
+    :param beta1: 1st moment control factor
+    :param beta2: 2nd moment control factor
+    :param epsilon: numberical stability coefficient (for calculating final update)
 
     @author: Alexander G. Ororbia II
     """

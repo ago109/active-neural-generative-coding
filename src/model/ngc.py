@@ -68,13 +68,13 @@ class NGC:
     Implementation of a simple, fast x-to-y neural generative coding (NGC) circuit.
 
     -- Arguments --
-    n_x: number of input neuronal units
-    n_y: number of output neuronal units
-    n_z: a 2-item list containing numbers of 1st and 2nd internal layers of neurons,
+    :param n_x: number of input neuronal units
+    :param n_y: number of output neuronal units
+    :param n_z: a 2-item list containing numbers of 1st and 2nd internal layers of neurons,
          i.e., [256,128]
-    eta: learning rate of circuit (for controlling rate of synaptic adjustments)
-    update_clip: upper bound on absolute magnitude of synaptic adjustments (Default: 200)
-    key: Jax seeding key to init this model with
+    :param eta: learning rate of circuit (for controlling rate of synaptic adjustments)
+    :param update_clip: upper bound on absolute magnitude of synaptic adjustments (Default: 200)
+    :param key: Jax seeding key to init this model with
 
     @author: Alexander Ororbia, Ankur Mali
     """
@@ -117,7 +117,7 @@ class NGC:
         """
         Runs fast ancestral projection routine for NGC circuit.
 
-        z_t: external state input to clamp to circuit
+        :param z_t: external state input to clamp to circuit
         """
         ## in effect, a forward pass as in any feedforward neural structure
         W1 = self.theta[0]
@@ -133,7 +133,6 @@ class NGC:
         h3 = run_syn(z2, W3, b3)
         z3 = h3 + 0
         return [0., h1, h2, h3], [z_t, z1, z2, z3]
-
 
     def _compute_update(self, z_t, y_t, z_init, m=None, verbose=False): ## internal routine
         self.K = 3
@@ -224,8 +223,8 @@ class NGC:
         """
         Runs internal settling routine of this neural circuit.
 
-        z_t: external state input to clamp to circuit
-        y_t: target output value to clamp to circuit
+        :param z_t: external state input to clamp to circuit
+        :param y_t: target output value to clamp to circuit
         """
         H, Z, E, update = self._compute_update(z_t, y_t, z_init=1.)
         dW1, dW2, dW3, db1, db2, db3 = update
@@ -236,7 +235,10 @@ class NGC:
                     self.theta[i] = constrain(self.theta[i], self.nw_norm)
         return H, Z, E
 
-    def decay_eta(self): ## decays learning rate/step-size one step in time
+    def decay_eta(self):
+        """
+        Decays learning rate/step-size of this circuit one step in time
+        """
         lower_bound_lr = 1e-7
         if self.eta_decay > 0.0:
             self.eta = (max(lower_bound_lr, float(self.eta * self.eta_decay)))
