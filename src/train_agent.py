@@ -1,14 +1,16 @@
 import sys, getopt, optparse
-sys.path.insert(0, 'model') ## link this script to model sub-directory
+#@sys.path.insert(0, 'model') ## link this script to model sub-directory
 
 ################################################################################
 ## collect program external arguments
 options, remainder = getopt.getopt(sys.argv[1:], '', ["seed=", "n_episodes=",
-                                                      "trial_id=", "results_dir="])
+                                                      "trial_id=", "results_dir=",
+                                                      "pwd="])
 # Collect arguments from argv
 seed = 42 ## program noise seed
 trial_id = 0
 n_episodes = 700 # 1000 ## number of episodes to simulate
+pwd = "" ## current working directory
 results_dir = "./"
 for opt, arg in options:
     if opt in ("--seed"):
@@ -17,9 +19,12 @@ for opt, arg in options:
         trial_id = int(arg.strip())
     elif opt in ("--results_dir"):
         results_dir = arg.strip()
+    elif opt in ("--pwd"):
+        pwd = arg.strip()
     elif opt in ("--n_episodes"):
         n_episodes = int(arg.strip())
-print(" >> Running trial {} w/ seed = {}".format(trial_id, seed))
+results_dir = "{}/{}".format(pwd, results_dir)
+print(" >> Running trial {} w/ seed = {}\n    Results Dir: {}".format(trial_id, seed, results_dir))
 ################################################################################
 
 import random
@@ -32,6 +37,7 @@ from jax import jit, numpy as jnp, random, nn
 from functools import partial
 import time
 import math
+sys.path.insert(0, '{}/src/model'.format(pwd)) ## link this script to model sub-directory
 from angc_model import ANGC
 import gymnasium as gym
 
@@ -63,7 +69,7 @@ save_chkpt = 100 ## periodically save arrays every so many episodes
 
 ################################################################################
 ############## Run simulation of agent's interaction w/ its world ##############
-
+print("..............")
 returns = [] ## raw episodic instrumental reward signals
 r_win = [] ## Rainbow-RL avg window
 epist_returns = [] ## raw episodic epistemic signals
