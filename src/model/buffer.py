@@ -1,7 +1,5 @@
 import random
-#import tensorflow as tf
 import numpy as np
-#from collections import deque
 
 class Buffer:
     """
@@ -9,10 +7,11 @@ class Buffer:
     Note that this also offers functionality for computing the expected returns
     across episodes (allowing it to serve as a rollout buffer if needed).
 
-    This code was extracted from the CogNGen library, where the module was
-    first proposed.
+    This code was extracted from the work on CogNGen
+    (Ororbia & Kelly, 2022; https://escholarship.org/uc/item/35j3v2kh), where
+    the module was first developed/used.
 
-    @author - Alexander G. Ororbia II
+    @author: Alexander G. Ororbia II
     """
     def __init__(self, buffer_capacity=100000, batch_size=64, seed=69):
         random.seed(seed)
@@ -46,40 +45,6 @@ class Buffer:
         Returns many sampled transitions are stored in memory currently
         """
         return self.buffer_counter
-
-    def calc_advantage(self, rew_slot_idx, value_slot_idx, done_slot_idx, gamma, gae_lambda=0.95):
-        """
-        Calculates the generalized expected advantage and discounted returns across
-        episodes (accounting for terminal states). Note that calling this
-        return will re-compute the advantages and override any existing values
-        currently w/in the self.advantage construct
-        """
-        rewards = self.memory[rew_slot_idx]
-        values = self.memory[value_slot_idx]
-        dones = self.memory[done_slot_idx].astype(np.float32)
-
-        adv = np.zeros((rewards.shape[0],1))
-        returns = np.zeros((rewards.shape[0],1))
-
-        # Accumulate discounted returns
-        discount = gamma
-        lmbda = gae_lambda
-        g = 0
-        returns_current = values[-1]
-        for i in reversed(range(rewards.shape[0])):
-            gamma = discount * (1.0 - dones[i])
-            if i != rewards.shape[0] - 1:
-                td_error = rewards[i] + gamma * values[i-1] - values[i]
-            else:
-                td_error = rewards[i] - values[i]
-            g = td_error * gamma * lmbda * g
-            returns_current = rewards[i] + gamma * returns_current
-            adv[i] = g
-            returns[i] = returns_current
-        adv = (adv - np.mean(adv))/(np.std(adv) + 1e-10)
-        self.advantage = adv
-        self.returns = returns
-
 
     # Takes observed transition tuple as input
     def record(self, obs_tuple):
