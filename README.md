@@ -5,15 +5,15 @@ in terms of predictive coding (PC) circuitry, resulting in an agent that learns 
 code specifically provides the mountain car experiments conducted.
 
 # Requirements
-Our implementation is easy to follow and, with knowledge of basic linear algebra, one can decode the inner workings of ANGC. Please consult
-<a href="https://ojs.aaai.org/index.php/AAAI/article/view/19876"> for general details on mechanics and experiments conducted at the time.
+Our implementation is easy to follow and, with knowledge of basic linear algebra, one can decode the inner workings of ANGC. Please consult our [paper](https://ojs.aaai.org/index.php/AAAI/article/view/19876) for general details on mechanics and experiments conducted at the time.
 In this framework, we have provided simple modules; thus hopefully making it very convenient to extend our framework.
 
-To run the code, you should only need following basic packages:
+To run the code, you should only need the following basic packages:
 1. Jax (version >= 0.4.18)
 2. Numpy
 3. Matplotlib
 4. Python (version >=3.11.4)
+5. [Gymnasium](https://github.com/Farama-Foundation/Gymnasium)
 
 # Execution
 
@@ -23,7 +23,7 @@ To generate mountain car results as per our paper, simply perform the following 
 2. `bash src/plot_exp_stats.sh` (This will produce visuals: a reward plot, an epistemic signal plot, and an agent position plot.)
 After running the above two scripts, you can find the simulation outputs in the example
 experimental results directory tree that have been pre-created for you.
-`results/mcar/angc/` contains the numerical array results for the ANGC model (over 3 experimental trials)  while
+`results/mcar/angc/` contains the numerical array results for the ANGC model (over 3 experimental trials),  while
 `results/mcar/` will contain the plots.
 
 In `results/mcar/`, the following is stored:
