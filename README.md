@@ -51,17 +51,13 @@ The agent car position plot:
 
 <img src="fig/mcar_xpos.png" width="300">
 
-<table>
-  <tr>
-    <td> <img src="fig/mcar_returns.png"  alt="1" width=300></td>
+<p float="left">
+  <img src="fig/mcar_returns.png" width="100" />
+  <img src="fig/mcar_returns.png" width="100" />
+  <img src="fig/mcar_returns.png" width="100" />
+</p>
 
-    <td><img src="fig/mcar_epi_returns.png" alt="2" width=300></td>
-   </tr>
-   <tr>
-      <td><img src="fig/mcar_xpos.png" alt="3" width=300></td>
-  </td>
-  </tr>
-</table>
+
 
 Tips while using this algorithm/model on other environments/worlds:
 1. Tinker with `gamma` (discount factor, values in range `[0.95,0.99]`) as well as
