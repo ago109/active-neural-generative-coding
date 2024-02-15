@@ -18,16 +18,19 @@ To run the code, you should only need following basic packages:
 # Execution
 
 To generate mountain car results as per our paper, simply perform the following steps (running the relevant provided Bash scripts) the following provided Bash scripts:
-1. `bash src/run_exp.sh` (This will train/adapt the ANGC agent over `E=700` episodes.)
+1. `bash src/run_exp.sh` (This will train/adapt the ANGC agent over `E=700` episodes. Note that this will overwrite the
+    pre-computed data found in `results/mcar/angc/`; store this data elsewhere if you want to keep it.)
 2. `bash src/plot_exp_stats.sh` (This will produce visuals: a reward plot, an epistemic signal plot, and an agent position plot.)
 After running the above two scripts, you can find the simulation outputs in the example
 experimental results directory tree that have been pre-created for you.
 `results/mcar/angc/` contains the numerical array results for the ANGC model (over 3 experimental trials)  while
 `results/mcar/` will contain the plots.
+
 In `results/mcar/`, the following is stored:
 * `mcar_returns.png` - plot of episodic rewards (w/ mountain car solution threshold and random baseline lower bound)
 * `mcar_epi_returns.png` - plot of episodic cumulative epistemic signals produced for ANGC trained on mountain car
 * `mcar_xpos.png` - plot of ANGC agent car position (x-coordinate; for mountain car only)
+
 In `results/mcar/angc/`, the following arrays are stored:
 * `rewards0.npy`, `rewards1.npy`, `rewards2.npy` - episodic reward arrays for trials 0, 1, and 2
 * `epi_rewards0.npy`, `epi_rewards1.npy`, `epi_rewards2.npy` - episodic reward arrays for trials 0, 1, and 2
@@ -48,7 +51,6 @@ and the agent car position plot (Right):
   <img src="fig/mcar_epi_returns.png" width="265" />
   <img src="fig/mcar_xpos.png" width="265" />
 </p>
-
 
 
 Tips while using this algorithm/model on other environments/worlds:
