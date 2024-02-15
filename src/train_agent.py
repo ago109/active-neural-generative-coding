@@ -52,9 +52,6 @@ obs_t, info = env.reset(seed=seed) ## also set gym's seed
 obs_t = jnp.expand_dims(obs_t, axis=0)
 o_dim = obs_t.shape[1]
 a_dim = env.action_space.n
-## Few important tips
-## List of hyper-parameters = eta, gamma
-## n_mem is memory buffer size
 agent = ANGC(o_dim, a_dim, eta=0.002,
              actor_n_z=[256,256],
              world_n_z=[256,256],
@@ -98,7 +95,8 @@ for e in range(n_episodes):
             D_t = 1.
 
         ## query generative model to produce an estimate of the epistemic signal
-        H, Z = agent.world_model._project(obs_t)
+        c_t = jnp.concatenate((obs_t, jnp.expand_dims(_act, axis=0)), axis=1)
+        H, Z = agent.world_model._project(c_t)
         mu_tp1 = Z[len(Z)-1]
         r_epi = jnp.linalg.norm(obs_tp1 - mu_tp1, axis=1, keepdims=True)
 

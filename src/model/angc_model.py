@@ -63,7 +63,7 @@ class ANGC:
         self.target_actor.theta[4] = self.actor.theta[4] + 0
         self.target_actor.theta[5] = self.actor.theta[5] + 0
         ## generative/world transition model
-        self.world_model = NGC(n_x, n_x, n_z=self.world_n_z, update_clip=100.,
+        self.world_model = NGC(n_x + n_a, n_x, n_z=self.world_n_z, update_clip=100.,
                                eta=eta, key=subkeys[1])
         ## experience replay memory model
         self.memory = Buffer(buffer_capacity=self.n_mem, batch_size=self.batch_size, seed=seed)
@@ -206,7 +206,8 @@ class ANGC:
 
         ## adjust synaptic parameters of agent's modules (action and world model)
         self.actor._settle(s_t, target)      ## update actor model
-        self.world_model._settle(s_t, s_tp1) ## update generative model
+        c_t = jnp.concatenate((s_t, _action), axis=1)
+        self.world_model._settle(c_t, s_tp1) ## update generative model
 
     def update_target(self):
         """
