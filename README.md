@@ -27,8 +27,10 @@ experimental results directory tree that have been pre-created for you.
 `results/mcar/` will contain the plots.
 
 In `results/mcar/`, the following is stored:
-* `mcar_returns.png` - plot of episodic rewards (w/ mountain car solution threshold and random baseline lower bound)
-* `mcar_epi_returns.png` - plot of episodic cumulative epistemic signals produced for ANGC trained on mountain car
+* `mcar_returns.png` - plot of episodic rewards (with the mountain car solution threshold
+   as well as random baseline lower bound)
+* `mcar_epi_returns.png` - plot of episodic cumulative epistemic signals produced for ANGC trained on
+  the mountain car problem
 * `mcar_xpos.png` - plot of ANGC agent car position (x-coordinate; for mountain car only)
 
 In `results/mcar/angc/`, the following arrays are stored:
