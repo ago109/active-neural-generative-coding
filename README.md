@@ -40,12 +40,15 @@ pre-computed experimental values for trials 0, 1, and 2 directly. If you do so, 
 roughly as follows:
 
 The episodic reward/return plot:
+
 <img src="fig/mcar_returns.png" width="300">
 
 The episodic cumulative epistemic signal plot:
+
 <img src="fig/mcar_epi_returns.png" width="300">
 
 The agent car position plot:
+
 <img src="fig/mcar_xpos.png" width="300">
 
 Tips while using this algorithm/model on other environments/worlds:
