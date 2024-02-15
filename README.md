@@ -61,11 +61,11 @@ and the agent car position plot (Right):
 Tips while using this algorithm/model on other environments/worlds:
 1. Tinker with `gamma` (discount factor, values in range `[0.95,0.99]`) as well as
    with `batch_size`  `eta`.
-2. Changing the architecture of the circuits (changing the number of neurons in each layer)
-   can help as well. Currently, inside leaky relu is used for the NGC circuits, but this
-   can be modified in the code to use other activation functions supported in JAX, as long
-   as the derivative is coded in.
-3. Track your local losses, which will help in the optimization. Play with different optimizers such as AdamW, Adam, and RMSprop to speed up the convergence.
+2. Changing the architecture of the circuits (i.e., adjusting the number of neurons in each layer)
+   can help as well. Currently, inside the system, leaky relu is used for the NGC circuits, but this
+   can be modified in the code to use other activation functions supported in JAX, so long
+   as the derivative of the activation is also coded in.
+3. Track your local losses, which will help in the optimization. Play with integrating different optimizers (beyond the Adam and SGD variants provided in this repo) such as AdamW and RMSprop to speed up the convergence.
 
 # Citation
 
