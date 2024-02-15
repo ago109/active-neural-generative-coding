@@ -44,9 +44,9 @@ reward/return plot (Left), episodic cumulative epistemic signal plot (Middle),
 and the agent car position plot (Right):
 
 <p float="left">
-  <img src="fig/mcar_returns.png" width="275" />
-  <img src="fig/mcar_epi_returns.png" width="275" />
-  <img src="fig/mcar_xpos.png" width="275" />
+  <img src="fig/mcar_returns.png" width="265" />
+  <img src="fig/mcar_epi_returns.png" width="265" />
+  <img src="fig/mcar_xpos.png" width="265" />
 </p>
 
 
