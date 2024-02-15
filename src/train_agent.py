@@ -52,6 +52,9 @@ obs_t, info = env.reset(seed=seed) ## also set gym's seed
 obs_t = jnp.expand_dims(obs_t, axis=0)
 o_dim = obs_t.shape[1]
 a_dim = env.action_space.n
+## Few important tips
+## List of hyper-parameters = eta, gamma
+## n_mem is memory buffer size
 agent = ANGC(o_dim, a_dim, eta=0.002,
              actor_n_z=[256,256],
              world_n_z=[256,256],
