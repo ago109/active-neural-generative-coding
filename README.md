@@ -60,7 +60,7 @@ and the agent car position plot (Right):
 
 Tips while using this algorithm/model on other environments/worlds:
 1. Tinker with `gamma` (discount factor, values in range `[0.95,0.99]`) as well as
-   with `batch_size`  `eta`.
+   with `batch_size` and `eta` (learning rate / synaptic adjustment rate).
 2. Changing the architecture of the circuits (i.e., adjusting the number of neurons in each layer)
    can help as well. Currently, inside the system, leaky relu is used for the NGC circuits, but this
    can be modified in the code to use other activation functions supported in JAX, so long
