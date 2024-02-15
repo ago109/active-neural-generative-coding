@@ -121,9 +121,6 @@ class MLP:
         #b2 = jnp.zeros((1, self.n_z[1]))
         #b3 = jnp.zeros((1, self.n_y))
         self.theta = [W1, W2, W3, b1, b2, b3]
-        '''
-        FIXME: is this Adam broken?
-        '''
         self.opt = Adam(learning_rate=self.eta)
         self.eta_decay = 1. # 0.9998 # 0.998 # learning rate decay
 
