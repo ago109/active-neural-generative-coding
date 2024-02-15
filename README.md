@@ -39,22 +39,14 @@ Note that if you just execute `bash src/plot_exp_stats.sh`, you will obtain plot
 pre-computed experimental values for trials 0, 1, and 2 directly. If you do so, you should obtain plots
 roughly as follows:
 
-The episodic reward/return plot:
-
-<img src="fig/mcar_returns.png" width="300">
-
-The episodic cumulative epistemic signal plot:
-
-<img src="fig/mcar_epi_returns.png" width="300">
-
-The agent car position plot:
-
-<img src="fig/mcar_xpos.png" width="300">
+With the provided experimental data, you should obtain the following episodic
+reward/return plot (Left), episodic cumulative epistemic signal plot (Middle),
+and the agent car position plot (Right):
 
 <p float="left">
-  <img src="fig/mcar_returns.png" width="100" />
-  <img src="fig/mcar_returns.png" width="100" />
-  <img src="fig/mcar_returns.png" width="100" />
+  <img src="fig/mcar_returns.png" width="200" />
+  <img src="fig/mcar_epi_returns.png" width="200" />
+  <img src="fig/mcar_xpos.png" width="200" />
 </p>
 
 
