@@ -48,8 +48,8 @@ pre-computed experimental values for trials 0, 1, and 2 directly. If you do so, 
 roughly as follows:
 
 With the provided experimental data, you should obtain the following episodic
-reward/return plot (Left), episodic cumulative epistemic signal plot (Middle),
-and the agent car position plot (Right):
+reward/return plot (Left; smoothened), episodic cumulative epistemic signal plot (Middle; un-smoothened),
+and the agent car position plot (Right; un-smoothened):
 
 <p float="left">
   <img src="fig/mcar_returns.png" width="265" />
