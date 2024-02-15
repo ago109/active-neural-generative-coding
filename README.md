@@ -53,12 +53,12 @@ The agent car position plot:
 
 <table>
   <tr>
-    <td> <img src="fig/mcar_returns.png"  alt="1" width = 360px height = 640px ></td>
+    <td> <img src="fig/mcar_returns.png"  alt="1" width=300></td>
 
-    <td><img src="fig/mcar_epi_returns.png" alt="2" width = 360px height = 640px></td>
+    <td><img src="fig/mcar_epi_returns.png" alt="2" width=300></td>
    </tr>
    <tr>
-      <td><img src="fig/mcar_xpos.png" alt="3" width = 360px height = 640px></td>
+      <td><img src="fig/mcar_xpos.png" alt="3" width=300></td>
   </td>
   </tr>
 </table>
