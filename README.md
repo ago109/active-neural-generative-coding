@@ -1,12 +1,14 @@
 # <p align="center">Active Neural Generative Coding (ANGC)</p>
 ## <p align="center">Biologically-plausible, Backpropagation-free Learning for Active Inference Neural Agents</p>
 Implementation of the proposed <a href="https://ojs.aaai.org/index.php/AAAI/article/view/19876">active neural generative coding (ANGC)   algorithm</a> for training a simple neurobiologically-plausible active-inference agent. This work instantiates a form of active inference
-in terms of predictive coding (PC) circuitry, resulting in an agent that learns by dynamically evolving two PC neural circuits -- an actor/policy circuit and a world/transition model -- across a stream of episodes. Note that this agent is meant for tackling simple dense and sparse reward control problems. The instrumental term (or prior preference) in ANGC is treated to be the problem reward function (reflecting an assumption based on the complete class theorem) while the epistemic foraging term is produced by the agent's world model circuit. This
-code specifically provides the mountain car experiments conducted.
-
+in terms of predictive coding (PC) circuitry, resulting in an agent that learns by dynamically evolving two PC neural circuits -- an actor/policy circuit and a world/transition model -- across a stream of episodes. Note that this agent is meant for tackling simple dense and sparse reward control problems. The instrumental term (or prior preference) in ANGC is treated to be the problem reward function (reflecting an assumption based on the complete class theorem) while the agent's world model circuit produces the epistemic foraging term. This
+code specifically provides the mountain car experiments conducted to support this work.
+Some key features of ANGC
+1. Unlike classical DQN, ANGC will stay near the goal state and won't suffer from stability issues.
+2. ANGC doesn't require modifications to the reward function, which is a common practice in RL, and can work on sparse rewards, as shown in our repo.
 # Requirements
 Our implementation is easy to follow and, with knowledge of basic linear algebra, one can decode the inner workings of ANGC. Please consult our [paper](https://ojs.aaai.org/index.php/AAAI/article/view/19876) for general details on mechanics and experiments conducted at the time.
-In this framework, we have provided simple modules; thus hopefully making it very convenient to extend our framework.
+In this framework, we have provided simple modules; thus making it very convenient to extend our framework.
 
 To run the code, you should only need the following basic packages:
 1. Jax (version >= 0.4.18)
@@ -60,8 +62,9 @@ Tips while using this algorithm/model on other environments/worlds:
    with `batch_size`  `eta`.
 2. Changing the architecture of the circuits (changing the number of neurons in each layer)
    can help as well. Currently, inside leaky relu is used for the NGC circuits, but this
-   can be modified in the code to use other activation functions supported in JAX, so long
+   can be modified in the code to use other activation functions supported in JAX, as long
    as the derivative is coded in.
+3. Track your local losses, which will help in the optimization. Play with different optimizers such as AdamW, Adam, and RMSprop to speed up the convergence.
 
 # Citation
 
