@@ -3,10 +3,8 @@
 Implementation of the proposed <a href="https://ojs.aaai.org/index.php/AAAI/article/view/19876">active neural generative coding (ANGC) algorithm</a> (AAAI 2022) for training a simple neurobiologically-plausible cognitive control agent. This work instantiates a form of active inference in terms of predictive coding (PC) circuitry, resulting in an agent that learns by dynamically evolving two PC neural circuits -- an actor/policy circuit and a world/transition model -- across a stream of episodes. Note that this agent is meant for tackling simple dense and sparse reward control problems. The instrumental term (or prior preference) in ANGC is treated to be the problem's (sparse) reward function (reflecting an assumption based on the complete class theorem) while the agent's world model circuit produces an epistemic foraging term. This code specifically provides the mountain car experiments conducted to support this work, in the context of Markov decision processes.
 
 <p align="center">
-<figure>
   <img height="250" src="fig/angc_theory.png">
-  <figcaption>Theoretical depiction of an ANGC agent.</figcaption>
-</figure>
+  <i>Theoretical depiction of an ANGC agent.</i>
 </p>
 
 
